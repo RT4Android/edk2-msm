@@ -1,6 +1,7 @@
 #include <PiDxe.h>
 
 #include <Library/ArmLib.h>
+#include <Library/TimerLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/CacheMaintenanceLib.h>
 #include <Library/HobLib.h>
@@ -10,6 +11,8 @@
 #include <Resources/font5x12.h>
 
 #include "Library/FrameBufferSerialPortLib.h"
+
+UINTN delay = 30000;
 
 FBCON_POSITION m_Position;
 FBCON_POSITION m_MaxPosition;
@@ -135,13 +138,16 @@ paint:
   m_Position.x++;
 
   if (m_Position.x >= (int)(m_MaxPosition.x / scale_factor))
-    goto newline;
+    goto newline2;
 
   if (intstate)
     ArmEnableInterrupts();
   return;
 
 newline:
+  MicroSecondDelay( delay );
+
+newline2:
   m_Position.y += scale_factor;
   m_Position.x = 0;
   if (m_Position.y >= m_MaxPosition.y - scale_factor) {
